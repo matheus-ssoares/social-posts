@@ -52,6 +52,6 @@ module.exports = {
   },
 
   down: async queryInterface => {
-    return queryInterface.dropTable('post_images');
+    return queryInterface.dropTable('post_comments');
   },
 };
