@@ -3,13 +3,13 @@ import {
   PrimaryKey,
   Table,
   Column,
-  CreatedAt,
-  UpdatedAt,
+  AutoIncrement,
 } from 'sequelize-typescript';
 
 @Table
-export class users extends Model<users> {
+export class users extends Model {
   @PrimaryKey
+  @AutoIncrement
   @Column
   id: string;
 
@@ -20,11 +20,11 @@ export class users extends Model<users> {
   image: string;
 
   @Column
-  externalId: string;
+  external_id: string;
 
-  @CreatedAt
-  created_at: Date;
+  @Column
+  createdAt: Date;
 
-  @UpdatedAt
-  updated_at: Date;
+  @Column
+  updatedAt: Date;
 }

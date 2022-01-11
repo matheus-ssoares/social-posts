@@ -2,8 +2,10 @@ import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
 import Joi from 'joi';
 
 export interface CreateUserRequestSchema extends ValidatedRequestSchema {
-  [ContainerTypes.Query]: {
+  [ContainerTypes.Body]: {
     name: string;
+    image: string;
+    external_id: string;
   };
 }
 

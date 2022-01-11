@@ -1,5 +1,7 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import * as dotenv from 'dotenv';
+import { models } from '.';
+
 dotenv.config();
 
 const conn = new Sequelize({
@@ -8,6 +10,7 @@ const conn = new Sequelize({
   host: process.env.NODE_ENV == 'development' ? 'localhost' : '',
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASS,
+  models,
   database: process.env.DB_NAME,
   logging: true,
 });

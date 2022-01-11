@@ -26,7 +26,11 @@ const handleError = (err: unknown, res: Response) => {
       statusCode,
       message,
     });
+    return;
   }
+  res.status(500).json({
+    status: 'error',
+  });
 };
 
 export { GenericError, NotFoundError, handleError };
