@@ -51,6 +51,7 @@ export const updateUser = async (
       { where: { id } },
     );
     const updatedUser = await users.findOne({ where: { id } });
+
     res.status(200).json(updatedUser);
   } catch (error) {
     console.log(error);

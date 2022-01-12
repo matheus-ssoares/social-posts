@@ -6,6 +6,7 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { userRoutes } from './routes/userRoutes';
 import { handleError } from './helpers/error';
+import { postsRoutes } from './routes/postsRoutes';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(express.json({ limit: '10000mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/users', userRoutes);
+app.use('/posts', postsRoutes);
 
 const expressServer = http.createServer(app);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

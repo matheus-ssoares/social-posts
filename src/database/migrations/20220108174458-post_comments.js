@@ -7,7 +7,7 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
       comment: {
         type: Sequelize.TEXT,
@@ -18,11 +18,11 @@ module.exports = {
       post_id: {
         type: Sequelize.UUID,
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },

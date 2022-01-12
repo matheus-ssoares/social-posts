@@ -4,28 +4,27 @@ import {
   Table,
   Column,
   AutoIncrement,
-  HasMany,
+  ForeignKey,
+  BelongsTo,
 } from 'sequelize-typescript';
-import { posts } from './posts';
+import { users } from './users';
 
 @Table
-export class users extends Model {
+export class posts extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
   id: string;
 
   @Column
-  name: string;
+  content: string;
 
   @Column
-  image: string;
+  @ForeignKey(() => users)
+  user_id: string;
 
-  @Column
-  external_id: string;
-
-  @HasMany(() => posts)
-  posts: posts[];
+  @BelongsTo(() => users)
+  users: users;
 
   @Column
   createdAt: Date;
