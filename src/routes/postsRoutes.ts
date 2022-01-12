@@ -1,5 +1,8 @@
 import express from 'express';
-import { createPostRequestSchema } from '../controllers/PostsController/schemas';
+import {
+  createPostRequestSchema,
+  updatePostSchema,
+} from '../controllers/PostsController/schemas';
 import * as PostsController from '../controllers/PostsController';
 
 import { validationBody } from '../helpers/validation';
@@ -10,4 +13,9 @@ postsRoutes.post(
   '/',
   (req, res, next) => validationBody(createPostRequestSchema, req, res, next),
   PostsController.createPost,
+);
+postsRoutes.put(
+  '/:id',
+  (req, res, next) => validationBody(updatePostSchema, req, res, next),
+  PostsController.updatePost,
 );
