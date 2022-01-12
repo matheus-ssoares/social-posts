@@ -14,3 +14,17 @@ export const createUserSchema = Joi.object({
   image: Joi.string(),
   external_id: Joi.string().uuid().required(),
 });
+
+export interface UpdateUserRequestSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Body]: {
+    name?: string;
+    image?: string;
+    external_id?: string;
+  };
+}
+
+export const updateUserSchema = Joi.object({
+  name: Joi.string(),
+  image: Joi.string(),
+  external_id: Joi.string().uuid(),
+});
