@@ -7,6 +7,8 @@ import * as dotenv from 'dotenv';
 import { userRoutes } from './routes/userRoutes';
 import { handleError } from './helpers/error';
 import { postsRoutes } from './routes/postsRoutes';
+import { rabbitMqConnect } from './utils/rabbitMqConnect';
+import { RabbitMqQueues } from './interfaces/rabbitMqQueues';
 
 dotenv.config();
 
@@ -32,5 +34,6 @@ const expressServer = http.createServer(app);
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   handleError(err, res);
 });
+rabbitMqConnect(RabbitMqQueues.USER_REGISTER);
 
 expressServer.listen(PORT, () => console.log(`Listening on port ${PORT}`));

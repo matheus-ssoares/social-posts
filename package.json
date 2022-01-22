@@ -10,6 +10,8 @@
     "migrate": "sequelize-cli migration:generate"
   },
   "dependencies": {
+    "@types/amqplib": "^0.8.2",
+    "amqplib": "^0.8.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "env": "^0.0.2",
