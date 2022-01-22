@@ -9,6 +9,7 @@ import { handleError } from './helpers/error';
 import { postsRoutes } from './routes/postsRoutes';
 import { rabbitMqConnect } from './utils/rabbitMqConnect';
 import { RabbitMqQueues } from './interfaces/rabbitMqQueues';
+import { homedir } from 'os';
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ const expressServer = http.createServer(app);
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   handleError(err, res);
 });
+app.use('/static', express.static(homedir + '/social-posts'));
 rabbitMqConnect(RabbitMqQueues.SOCIAL_USERS);
 
 expressServer.listen(PORT, () => console.log(`Listening on port ${PORT}`));

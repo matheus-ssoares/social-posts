@@ -6,7 +6,9 @@ import {
   AutoIncrement,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from 'sequelize-typescript';
+import { post_images } from './post_images';
 import { users } from './users';
 
 @Table
@@ -25,6 +27,9 @@ export class posts extends Model {
 
   @BelongsTo(() => users)
   users: users;
+
+  @HasMany(() => post_images)
+  post_images: post_images;
 
   @Column
   createdAt: Date;

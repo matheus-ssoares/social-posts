@@ -4,7 +4,7 @@ import { models } from '.';
 
 dotenv.config();
 
-const conn = new Sequelize({
+export const sequelize = new Sequelize({
   dialect: 'postgres',
   port: Number(process.env.DB_PORT) || 5432,
   host: process.env.NODE_ENV == 'development' ? 'localhost' : '',
@@ -15,7 +15,7 @@ const conn = new Sequelize({
   logging: true,
 });
 
-conn
+sequelize
   .authenticate()
   .then(() => {
     console.log('Connection has been established successfully.');
