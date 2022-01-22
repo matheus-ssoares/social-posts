@@ -7,6 +7,7 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 import { posts } from './posts';
+import { post_likes } from './post_likes';
 
 @Table
 export class users extends Model {
@@ -26,6 +27,9 @@ export class users extends Model {
 
   @HasMany(() => posts)
   posts: posts[];
+
+  @HasMany(() => post_likes)
+  post_likes: post_likes[];
 
   @Column
   createdAt: Date;

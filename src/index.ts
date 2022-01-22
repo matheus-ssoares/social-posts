@@ -10,6 +10,7 @@ import { postsRoutes } from './routes/postsRoutes';
 import { rabbitMqConnect } from './utils/rabbitMqConnect';
 import { RabbitMqQueues } from './interfaces/rabbitMqQueues';
 import { homedir } from 'os';
+import { postLikesRoutes } from './routes/postLikes';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/users', userRoutes);
 app.use('/posts', postsRoutes);
+app.use('/post-likes', postLikesRoutes);
 
 const expressServer = http.createServer(app);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -5,7 +5,7 @@ import {
   updatePostSchema,
 } from '../controllers/PostsController/schemas';
 import * as PostsController from '../controllers/PostsController';
-import { validationBody } from '../helpers/validation';
+import { SchemaTypes, validation } from '../helpers/validation';
 import { homedir } from 'os';
 
 const upload = multer({
@@ -26,12 +26,24 @@ postsRoutes.get('/', PostsController.getAllPosts);
 postsRoutes.post(
   '/',
   upload.array('images'),
-  (req, res, next) => validationBody(createPostRequestSchema, req, res, next),
+  (req, res, next) =>
+    validation(
+      [{ type: SchemaTypes.BODY, schema: createPostRequestSchema }],
+      req,
+      res,
+      next,
+    ),
   PostsController.createPost,
 );
 postsRoutes.put(
   '/:id',
-  (req, res, next) => validationBody(updatePostSchema, req, res, next),
+  (req, res, next) =>
+    validation(
+      [{ type: SchemaTypes.BODY, schema: updatePostSchema }],
+      req,
+      res,
+      next,
+    ),
   PostsController.updatePost,
 );
 postsRoutes.delete('/:id', PostsController.deletePost);
