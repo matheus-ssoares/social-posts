@@ -25,7 +25,7 @@ interface TranslateFunctionsType {
 async function createUserFromMessage(user: CreateUserMessagePayload) {
   const { name, externalId } = user;
   try {
-    await users.create({ name, externalId });
+    await users.create({ name, external_id: externalId });
   } catch (error) {
     console.log(error);
   }
@@ -33,7 +33,10 @@ async function createUserFromMessage(user: CreateUserMessagePayload) {
 async function updateUserFromMessage(user: CreateUserMessagePayload) {
   const { name, externalId } = user;
   try {
-    await users.update({ name, externalId }, { where: { externalId } });
+    await users.update(
+      { name, external_id: externalId },
+      { where: { external_id: externalId } },
+    );
   } catch (error) {
     console.log(error);
   }
@@ -54,7 +57,6 @@ export function saveRabbitMqMessage(msg: amqp.Message | null) {
     );
 
     if (!events.find(event => event === convertedMsg.eventType)) {
-      console.log(convertedMsg.eventType);
       throw new Error('received event not found');
     }
     translate[convertedMsg.eventType](convertedMsg);

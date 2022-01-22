@@ -34,6 +34,6 @@ const expressServer = http.createServer(app);
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   handleError(err, res);
 });
-rabbitMqConnect(RabbitMqQueues.USER_REGISTER);
+rabbitMqConnect(RabbitMqQueues.SOCIAL_USERS);
 
 expressServer.listen(PORT, () => console.log(`Listening on port ${PORT}`));
