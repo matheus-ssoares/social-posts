@@ -7,6 +7,7 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 import { posts } from './posts';
+import { post_comments } from './post_comments';
 import { post_likes } from './post_likes';
 
 @Table
@@ -27,6 +28,9 @@ export class users extends Model {
 
   @HasMany(() => posts)
   posts: posts[];
+
+  @HasMany(() => post_comments)
+  post_comments: post_comments[];
 
   @HasMany(() => post_likes)
   post_likes: post_likes[];

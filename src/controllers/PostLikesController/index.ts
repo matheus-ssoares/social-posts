@@ -1,6 +1,5 @@
 import { Response, NextFunction } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
-import { networkInterfaces } from 'os';
 import { post_likes } from '../../database/models/post_likes';
 import { GenericError, NotFoundError } from '../../helpers/error';
 import {
