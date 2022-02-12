@@ -52,12 +52,14 @@ export const createPost = async (
 
     const requestImages = req.files as Express.Multer.File[];
 
-    requestImages.forEach(async image => {
-      post_images.create({
-        image: image.filename,
-        post_id: post.id,
+    if (requestImages) {
+      requestImages.forEach(async image => {
+        post_images.create({
+          image: image.filename,
+          post_id: post.id,
+        });
       });
-    });
+    }
 
     transaction.commit();
     res.status(200).json(post);

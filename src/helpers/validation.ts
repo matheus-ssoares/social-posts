@@ -32,8 +32,8 @@ export function validation(
     }
   });
 
-  if (errors.lenght > 0) {
-    res.status(422).send({
+  if (errors.length > 0) {
+    return res.status(422).send({
       message: 'Validation error',
       details: errors,
     });
