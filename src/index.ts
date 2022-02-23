@@ -41,6 +41,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   handleError(err, res);
 });
 app.use('/static', express.static(homedir + '/social-posts'));
-rabbitMqConnect(RabbitMqQueues.SOCIAL_USERS);
 
+rabbitMqConnect(RabbitMqQueues.SOCIAL_USERS);
 expressServer.listen(PORT, () => console.log(`Listening on port ${PORT}`));

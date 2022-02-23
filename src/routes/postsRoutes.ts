@@ -21,7 +21,7 @@ const upload = multer({
 
 export const postsRoutes = express.Router();
 
-postsRoutes.get('/', PostsController.getAllPosts);
+postsRoutes.get('/:skip', PostsController.getAllPosts);
 
 postsRoutes.post(
   '/',

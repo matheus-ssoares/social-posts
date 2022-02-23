@@ -8,14 +8,31 @@ import { post_images } from '../../database/models/post_images';
 import { users } from '../../database/models/users';
 import { GenericError, NotFoundError } from '../../helpers/error';
 import { CreatePostRequestSchema, UpdatePostRequestSchema } from './schemas';
+import { post_comments } from '../../database/models/post_comments';
+import { post_likes } from '../../database/models/post_likes';
 
 export const getAllPosts = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
+  const { skip } = req.params;
+
   try {
-    const { rows, count } = await posts.findAndCountAll({ limit: 30 });
+    if (!skip) {
+      throw new GenericError(400, 'skip is required');
+    }
+    const { rows, count } = await posts.findAndCountAll({
+      limit: 30,
+      offset: Number(skip),
+      order: [['createdAt', 'DESC']],
+      include: [
+        users,
+        { model: post_comments, include: [users] },
+        { model: post_likes, include: [users] },
+        post_images,
+      ],
+    });
 
     return res.json({
       total: count,
@@ -36,33 +53,42 @@ export const createPost = async (
   const transaction = await sequelize.transaction();
   try {
     const findUser = await users.findOne({
-      where: { id: body.user_id },
+      where: body?.user_id
+        ? { id: body?.user_id }
+        : { external_id: body?.external_id },
     });
 
     if (!findUser) {
       throw new NotFoundError();
     }
 
-    const post = await posts.create({
-      content: body.content,
-      user_id: findUser.id,
-      created_at: new Date(),
-      updated_at: new Date(),
-    });
+    const post = await posts.create(
+      {
+        content: body.content,
+        user_id: findUser.id,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      { transaction },
+    );
 
     const requestImages = req.files as Express.Multer.File[];
 
     if (requestImages) {
       requestImages.forEach(async image => {
-        post_images.create({
+        await post_images.create({
           image: image.filename,
           post_id: post.id,
         });
       });
     }
+    await transaction.commit();
+    const findCreatedPost = await posts.findOne({
+      where: { id: post.id },
+      include: [post_images, post_likes, users],
+    });
 
-    transaction.commit();
-    res.status(200).json(post);
+    res.status(200).json(findCreatedPost);
   } catch (error) {
     transaction.rollback();
     console.log(error);
@@ -125,8 +151,11 @@ export const deletePost = async (
       where: { post_id: foundPost.id },
     });
 
-    await post_images.destroy({ where: { post_id: id } });
-    await posts.destroy({ where: { id } });
+    await post_images.destroy({
+      where: { post_id: id },
+      transaction: transaction,
+    });
+    await posts.destroy({ where: { id }, transaction: transaction });
 
     findAllPostFiles.forEach(file => {
       try {
