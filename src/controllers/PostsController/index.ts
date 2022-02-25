@@ -22,21 +22,22 @@ export const getAllPosts = async (
     if (!skip) {
       throw new GenericError(400, 'skip is required');
     }
-    const { rows, count } = await posts.findAndCountAll({
+    const postsAmount = await posts.count();
+    const findPosts = await posts.findAll({
       limit: 30,
       offset: Number(skip),
       order: [['createdAt', 'DESC']],
       include: [
         users,
-        { model: post_comments, include: [users] },
-        { model: post_likes, include: [users] },
+        { model: post_comments, include: [users], required: false },
+        { model: post_likes, include: [users], required: false },
         post_images,
       ],
     });
 
     return res.json({
-      total: count,
-      posts: rows,
+      total: postsAmount,
+      posts: findPosts,
     });
   } catch (error) {
     next(error);
@@ -83,14 +84,16 @@ export const createPost = async (
       });
     }
     await transaction.commit();
-    const findCreatedPost = await posts.findOne({
-      where: { id: post.id },
-      include: [post_images, post_likes, users],
-    });
 
-    res.status(200).json(findCreatedPost);
+    setTimeout(async () => {
+      const findCreatedPost = await posts.findOne({
+        where: { id: post.id },
+        include: [post_likes, users, post_images],
+      });
+      res.status(200).json(findCreatedPost);
+    }, 500);
   } catch (error) {
-    transaction.rollback();
+    await transaction.rollback();
     console.log(error);
     next(error);
   }

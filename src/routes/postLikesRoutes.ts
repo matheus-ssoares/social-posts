@@ -4,7 +4,6 @@ import {
   deletePostLikeRequestSchema,
 } from '../controllers/PostLikesController/schemas';
 import * as PostLikesController from '../controllers/PostLikesController';
-
 import { SchemaTypes, validation } from '../helpers/validation';
 
 export const postLikesRoutes = express.Router();
@@ -22,10 +21,10 @@ postLikesRoutes.post(
 );
 
 postLikesRoutes.delete(
-  '/:id',
+  '/',
   (req, res, next) =>
     validation(
-      [{ type: SchemaTypes.HEADER, schema: deletePostLikeRequestSchema }],
+      [{ type: SchemaTypes.QUERY, schema: deletePostLikeRequestSchema }],
       req,
       res,
       next,

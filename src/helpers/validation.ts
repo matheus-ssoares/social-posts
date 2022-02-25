@@ -6,6 +6,7 @@ export enum SchemaTypes {
   HEADER = 'header',
   BODY = 'body',
   PARAMS = 'params',
+  QUERY = 'query',
 }
 interface ParamsSchema {
   type: SchemaTypes;
