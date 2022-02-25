@@ -19,6 +19,16 @@ export const createPostRequestSchema = Joi.object({
   external_id: Joi.string(),
 });
 
+export interface GetAllPostsRequestSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Query]: {
+    skip: string;
+  };
+}
+
+export const getAllPostsSchema = Joi.object({
+  skip: Joi.required(),
+});
+
 export interface UpdatePostRequestSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     content?: string;

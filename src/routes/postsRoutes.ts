@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import {
   createPostRequestSchema,
+  getAllPostsSchema,
   updatePostSchema,
 } from '../controllers/PostsController/schemas';
 import * as PostsController from '../controllers/PostsController';
@@ -21,7 +22,17 @@ const upload = multer({
 
 export const postsRoutes = express.Router();
 
-postsRoutes.get('/:skip', PostsController.getAllPosts);
+postsRoutes.get(
+  '/',
+  (req, res, next) =>
+    validation(
+      [{ type: SchemaTypes.QUERY, schema: getAllPostsSchema }],
+      req,
+      res,
+      next,
+    ),
+  PostsController.getAllPosts,
+);
 
 postsRoutes.post(
   '/',

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import fs from 'fs';
 import { homedir } from 'os';
 import { ValidatedRequest } from 'express-joi-validation';
@@ -7,16 +7,20 @@ import { posts } from '../../database/models/posts';
 import { post_images } from '../../database/models/post_images';
 import { users } from '../../database/models/users';
 import { GenericError, NotFoundError } from '../../helpers/error';
-import { CreatePostRequestSchema, UpdatePostRequestSchema } from './schemas';
+import {
+  CreatePostRequestSchema,
+  GetAllPostsRequestSchema,
+  UpdatePostRequestSchema,
+} from './schemas';
 import { post_comments } from '../../database/models/post_comments';
 import { post_likes } from '../../database/models/post_likes';
 
 export const getAllPosts = async (
-  req: Request,
+  req: ValidatedRequest<GetAllPostsRequestSchema>,
   res: Response,
   next: NextFunction,
 ) => {
-  const { skip } = req.params;
+  const { skip } = req.query;
 
   try {
     if (!skip) {
