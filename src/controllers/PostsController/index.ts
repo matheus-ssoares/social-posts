@@ -9,6 +9,7 @@ import { users } from '../../database/models/users';
 import { GenericError, NotFoundError } from '../../helpers/error';
 import {
   CreatePostRequestSchema,
+  GetAllPostsByUserRequestSchema,
   GetAllPostsRequestSchema,
   UpdatePostRequestSchema,
 } from './schemas';
@@ -33,8 +34,8 @@ export const getAllPosts = async (
       order: [['createdAt', 'DESC']],
       include: [
         users,
-        { model: post_comments, include: [users], required: false },
-        { model: post_likes, include: [users], required: false },
+        { model: post_comments, include: [users], limit: 4 },
+        { model: post_likes, include: [users] },
         post_images,
       ],
     });
@@ -43,6 +44,42 @@ export const getAllPosts = async (
       total: postsAmount,
       posts: findPosts,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllPostsByUser = async (
+  req: ValidatedRequest<GetAllPostsByUserRequestSchema>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { user_id, external_id, skip } = req.query;
+
+    const findUser = await users.findOne({
+      where: user_id ? { id: user_id } : { external_id: external_id },
+    });
+
+    if (!findUser) {
+      throw new NotFoundError('User not found');
+    }
+    const countPosts = await posts.count();
+
+    const findPosts = await posts.findAll({
+      where: { user_id: findUser.id },
+      limit: 30,
+      offset: Number(skip),
+      order: [['createdAt', 'DESC']],
+      include: [
+        users,
+        { model: post_comments, include: [users], limit: 4 },
+        { model: post_likes, include: [users] },
+        post_images,
+      ],
+    });
+
+    res.json({ total: countPosts, posts: findPosts });
   } catch (error) {
     next(error);
   }
@@ -90,11 +127,13 @@ export const createPost = async (
     await transaction.commit();
 
     setTimeout(async () => {
-      const findCreatedPost = await posts.findOne({
-        where: { id: post.id },
-        include: [post_likes, users, post_images],
-      });
-      res.status(200).json(findCreatedPost);
+      res
+        .status(200)
+        .json(
+          (
+            await post.reload({ include: [post_likes, users, post_images] })
+          ).toJSON(),
+        );
     }, 500);
   } catch (error) {
     await transaction.rollback();

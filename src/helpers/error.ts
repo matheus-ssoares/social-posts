@@ -11,10 +11,11 @@ class GenericError extends Error {
 
 class NotFoundError extends Error {
   statusCode: number;
-  constructor() {
+  customMessage?: string;
+  constructor(customMessage?: string) {
     super();
     this.statusCode = 404;
-    this.message = 'Not found';
+    this.message = customMessage ? customMessage : 'Not found';
   }
 }
 

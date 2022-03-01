@@ -38,3 +38,21 @@ export interface UpdatePostRequestSchema extends ValidatedRequestSchema {
 export const updatePostSchema = Joi.object({
   content: Joi.string(),
 });
+
+export interface GetAllPostsByUserRequestSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Query]: {
+    skip: string;
+    user_id: string;
+    external_id?: string;
+  };
+}
+
+export const getAllPostsByUserSchema = Joi.object({
+  skip: Joi.string().required(),
+  user_id: Joi.string().when('external_id', {
+    is: Joi.exist(),
+    then: Joi.string(),
+    otherwise: Joi.string().required(),
+  }),
+  external_id: Joi.string(),
+});

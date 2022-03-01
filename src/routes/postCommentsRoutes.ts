@@ -4,10 +4,23 @@ import * as PostCommentsController from '../controllers/PostCommentsController';
 import {
   createPostCommentRequestSchema,
   deletePostCommentRequestSchema,
+  getAllPostCommentsRequestSchema,
 } from '../controllers/PostCommentsController/schemas';
 import { SchemaTypes, validation } from '../helpers/validation';
 
 export const postCommentsRoutes = express.Router();
+
+postCommentsRoutes.get(
+  '/',
+  (req, res, next) =>
+    validation(
+      [{ type: SchemaTypes.QUERY, schema: getAllPostCommentsRequestSchema }],
+      req,
+      res,
+      next,
+    ),
+  PostCommentsController.getAllPostComments,
+);
 
 postCommentsRoutes.post(
   '/',
