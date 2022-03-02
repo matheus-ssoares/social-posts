@@ -10,6 +10,7 @@ const events = [
 type CreateUserMessagePayload = {
   eventType: RabbitMqEventTypes;
   name?: string;
+  image?: string;
   externalId: string;
 };
 
@@ -31,10 +32,10 @@ async function createUserFromMessage(user: CreateUserMessagePayload) {
   }
 }
 async function updateUserFromMessage(user: CreateUserMessagePayload) {
-  const { name, externalId } = user;
+  const { name, image, externalId } = user;
   try {
     await users.update(
-      { name, external_id: externalId },
+      { name, image, external_id: externalId },
       { where: { external_id: externalId } },
     );
   } catch (error) {
@@ -59,6 +60,7 @@ export function saveRabbitMqMessage(msg: amqp.Message | null) {
     if (!events.find(event => event === convertedMsg.eventType)) {
       throw new Error('received event not found');
     }
+    console.log(convertedMsg.eventType);
     translate[convertedMsg.eventType](convertedMsg);
   } catch (error) {
     if (error instanceof Error) {
