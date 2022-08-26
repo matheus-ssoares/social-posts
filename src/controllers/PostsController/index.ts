@@ -11,6 +11,7 @@ import {
   CreatePostRequestSchema,
   GetAllPostsByUserRequestSchema,
   GetAllPostsRequestSchema,
+  GetPostRequestSchema,
   UpdatePostRequestSchema,
 } from './schemas';
 import { post_comments } from '../../database/models/post_comments';
@@ -85,6 +86,32 @@ export const getAllPostsByUser = async (
   }
 };
 
+export const getPost = async (
+  req: ValidatedRequest<GetPostRequestSchema>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { post_id } = req.query;
+
+    const findPost = await posts.findOne({
+      where: { id: post_id },
+      include: [
+        users,
+        { model: post_comments, include: [users], limit: 4 },
+        { model: post_likes, include: [users] },
+        post_images,
+      ],
+    });
+    if (!findPost) {
+      throw new NotFoundError();
+    }
+
+    res.json(findPost?.toJSON());
+  } catch (error) {
+    next(error);
+  }
+};
 export const createPost = async (
   req: ValidatedRequest<CreatePostRequestSchema>,
   res: Response,

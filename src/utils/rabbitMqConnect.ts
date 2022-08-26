@@ -8,11 +8,11 @@ export function rabbitMqConnect(queue: RabbitMqQueues) {
     connection.createChannel(function (error1, channel) {
       if (error1) throw error1;
 
-      channel.assertQueue(queue, {
-        durable: false,
-      });
       console.log(' [*] Listening messages in %s', queue);
-      channel.consume(queue, saveRabbitMqMessage);
+      channel.consume(queue, msg => {
+        saveRabbitMqMessage(msg);
+        channel.ack(msg!);
+      });
     });
   });
 }

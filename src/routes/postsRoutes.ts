@@ -4,6 +4,7 @@ import {
   createPostRequestSchema,
   getAllPostsByUserSchema,
   getAllPostsSchema,
+  getPostSchema,
   updatePostSchema,
 } from '../controllers/PostsController/schemas';
 import * as PostsController from '../controllers/PostsController';
@@ -33,6 +34,17 @@ postsRoutes.get(
       next,
     ),
   PostsController.getAllPostsByUser,
+);
+postsRoutes.get(
+  '/get-post',
+  (req, res, next) =>
+    validation(
+      [{ type: SchemaTypes.QUERY, schema: getPostSchema }],
+      req,
+      res,
+      next,
+    ),
+  PostsController.getPost,
 );
 postsRoutes.get(
   '/',

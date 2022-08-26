@@ -56,3 +56,13 @@ export const getAllPostsByUserSchema = Joi.object({
   }),
   external_id: Joi.string(),
 });
+
+export interface GetPostRequestSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Query]: {
+    post_id: string;
+  };
+}
+
+export const getPostSchema = Joi.object({
+  post_id: Joi.string().uuid().required(),
+});

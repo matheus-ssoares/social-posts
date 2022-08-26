@@ -1,5 +1,6 @@
 export enum RabbitMqQueues {
   SOCIAL_USERS = 'social_users',
+  SOCIAL_POSTS = 'social_posts',
 }
 export enum RabbitMqEventTypes {
   USER_CREATED = 'user_created',
